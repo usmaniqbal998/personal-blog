@@ -8,6 +8,8 @@ export interface TrackData {
   title: string;
   artist: string;
   albumArt: string | null;
+  previewUrl: string | null;
+  spotifyUrl: string | null;
   isPlaying: boolean;
   progressMs: number | null;
   durationMs: number | null;
@@ -56,6 +58,8 @@ export async function getNowPlaying(): Promise<TrackData | null> {
       .map((a) => a.name)
       .join(", "),
     albumArt: (data.item.album.images[0]?.url as string) ?? null,
+    previewUrl: (data.item.preview_url as string) ?? null,
+    spotifyUrl: (data.item.external_urls?.spotify as string) ?? null,
     isPlaying: data.is_playing as boolean,
     progressMs: data.progress_ms as number,
     durationMs: data.item.duration_ms as number,
@@ -80,6 +84,8 @@ export async function getLastPlayed(): Promise<TrackData | null> {
     title: item.name as string,
     artist: (item.artists as { name: string }[]).map((a) => a.name).join(", "),
     albumArt: (item.album.images[0]?.url as string) ?? null,
+    previewUrl: (item.preview_url as string) ?? null,
+    spotifyUrl: (item.external_urls?.spotify as string) ?? null,
     isPlaying: false,
     progressMs: null,
     durationMs: item.duration_ms as number,
