@@ -59,7 +59,7 @@ export function Hero() {
         {/* CTAs */}
         <div className="flex gap-2.5 flex-wrap">
           <a
-            href="mailto:hello@fieldnotes.blog"
+            href="mailto:hello@usman-iqbal.blog"
             className="hero-cta-primary inline-flex items-center gap-s-2 px-s-4 py-2.75 text-body-s font-medium rounded-md text-bg no-underline border border-transparent transition-[transform,box-shadow] duration-150"
           >
             <span className="hero-wave inline-block text-body-l leading-none origin-[70%_70%]">

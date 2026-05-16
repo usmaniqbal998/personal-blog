@@ -2,7 +2,7 @@
 
 A personal blog about agentic AI and agentic workflows — built with Next.js, MDX, and Tailwind CSS.
 
-Live at [fieldnotes.blog](https://fieldnotes.blog)
+Live at [usman-iqbal.blog](https://usman-iqbal.blog)
 
 ## Tech Stack
 

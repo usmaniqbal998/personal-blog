@@ -31,11 +31,11 @@ export function WelcomeEmail() {
             browse the archive at{" "}
             <Link
               href={
-                process.env.NEXT_PUBLIC_SITE_URL ?? "https://fieldnotes.blog"
+                process.env.NEXT_PUBLIC_SITE_URL ?? "https://usman-iqbal.blog"
               }
               style={link}
             >
-              fieldnotes.blog
+              usman-iqbal.blog
             </Link>
             .
           </Text>
@@ -44,11 +44,11 @@ export function WelcomeEmail() {
             — Usman ·{" "}
             <Link
               href={
-                process.env.NEXT_PUBLIC_SITE_URL ?? "https://fieldnotes.blog"
+                process.env.NEXT_PUBLIC_SITE_URL ?? "https://usman-iqbal.blog"
               }
               style={link}
             >
-              fieldnotes.blog
+              usman-iqbal.blog
             </Link>
           </Text>
           <Text style={footerText}>

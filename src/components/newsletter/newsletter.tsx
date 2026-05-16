@@ -21,7 +21,7 @@ export function Newsletter() {
 
       {status === "success" ? (
         <p className="font-mono text-mono uppercase tracking-uppercase text-c1 py-s-3">
-          // SIGNAL RECEIVED. WELCOME.
+          // Welcome aboard 🎉 First dispatch arriving soon.
         </p>
       ) : (
         <form onSubmit={submit} className="flex gap-s-2 flex-wrap">

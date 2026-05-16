@@ -38,19 +38,27 @@ export async function POST(request: Request) {
   });
 
   if (contactError) {
-    // A validation_error typically means the contact already exists — still proceed
-    if (contactError.name !== "validation_error") {
+    // Ignore validation_error (duplicate contact) and restricted_api_key (key lacks audience permission)
+    if (
+      contactError.name !== "validation_error" &&
+      contactError.name !== "restricted_api_key"
+    ) {
       console.error("[subscribe] contacts.create error:", contactError);
       return NextResponse.json(
         { error: "Subscription failed" },
         { status: 500 },
       );
     }
+    if (contactError.name === "restricted_api_key") {
+      console.warn(
+        "[subscribe] API key lacks audience permission — skipping contact creation",
+      );
+    }
   }
 
   // Send welcome email
   const { error: emailError } = await resend.emails.send({
-    from: process.env.FROM_EMAIL ?? "Field Notes <hello@fieldnotes.blog>",
+    from: process.env.FROM_EMAIL ?? "Field Notes <hello@usman-iqbal.blog>",
     to: email,
     subject: "Welcome to Field Notes",
     react: React.createElement(WelcomeEmail),

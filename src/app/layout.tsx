@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   description:
     "A front-row seat to the AI era — from someone actually building in it. Notes on agentic AI, autonomous workflows, and what's coming next.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://fieldnotes.blog",
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://usman-iqbal.blog",
   ),
   openGraph: {
     type: "website",
