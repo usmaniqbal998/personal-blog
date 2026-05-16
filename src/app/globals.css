@@ -1,0 +1,498 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Field Notes — Design Tokens
+   Source of truth: claude-design/colors_and_type.css
+   ============================================================ */
+
+:root {
+  /* ---------- Accent pairs (dynamic — switchable via JS) ---------- */
+  --c1: #f472b6; /* Plasma pink (default) */
+  --c2: #8b5cf6; /* Plasma violet (default) */
+  --c1-rgb: 244, 114, 182;
+  --c2-rgb: 139, 92, 246;
+
+  /* ---------- Motion ---------- */
+  --flow-speed: 12s;
+  --grid-intensity: 0.33;
+}
+
+/* ============================================================
+   Tailwind v4 Theme — @theme inline
+   ============================================================ */
+
+@theme inline {
+  /* ---------- Surface neutrals ---------- */
+  --color-bg: #05060a;
+  --color-bg-elev: #0a0c14;
+  --color-bg-panel: rgba(10, 12, 20, 0.5);
+
+  /* ---------- Foreground ---------- */
+  --color-fg: #e8eaf1;
+  --color-fg-dim: #8b91a8;
+  --color-fg-faint: #4a5068;
+
+  /* ---------- Borders ---------- */
+  --color-line: rgba(140, 150, 180, 0.08);
+  --color-line-strong: rgba(140, 150, 180, 0.16);
+
+  /* ---------- Accents (reference CSS vars for dynamic switching) ---------- */
+  --color-c1: var(--c1);
+  --color-c2: var(--c2);
+
+  /* ---------- Palette presets (static — for reference/selection) ---------- */
+  --color-plasma-1: #f472b6;
+  --color-plasma-2: #8b5cf6;
+  --color-electric-1: #22d3ee;
+  --color-electric-2: #a855f7;
+  --color-voltage-1: #fde047;
+  --color-voltage-2: #22d3ee;
+  --color-nebula-1: #60a5fa;
+  --color-nebula-2: #c084fc;
+  --color-terminal-1: #4ade80;
+  --color-terminal-2: #22d3ee;
+
+  /* ---------- Code syntax tokens ---------- */
+  --color-tok-kw: #c084fc;
+  --color-tok-fn: #60a5fa;
+  --color-tok-str: #4ade80;
+  --color-tok-num: #fbbf24;
+  --color-tok-com: #4a5068;
+  --color-tok-typ: #22d3ee;
+  --color-tok-pun: #8b91a8;
+  --color-tok-prop: #f472b6;
+  --color-tok-add: #4ade80;
+  --color-tok-del: #f87171;
+
+  /* ---------- Typography ---------- */
+  --font-display: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-sketch: var(--font-caveat), "Comic Sans MS", cursive;
+
+  /* Type scale */
+  --text-display-xl: 56px;
+  --text-display-l: 44px;
+  --text-display-m: 32px;
+  --text-display-s: 22px;
+  --text-body-l: 16px;
+  --text-body: 15px;
+  --text-body-s: 13px;
+  --text-meta: 12.5px;
+  --text-mono-l: 13px;
+  --text-mono: 11px;
+  --text-mono-s: 10px;
+  --text-mono-xs: 9.5px;
+
+  /* Line heights */
+  --leading-tight: 1.05;
+  --leading-snug: 1.2;
+  --leading-body: 1.65;
+  --leading-loose: 1.72;
+
+  /* Letter spacing */
+  --tracking-uppercase: 0.15em;
+  --tracking-display: -0.01em;
+
+  /* ---------- Spacing scale (8px base) ---------- */
+  --spacing-s-1: 4px;
+  --spacing-s-2: 8px;
+  --spacing-s-3: 14px;
+  --spacing-s-4: 18px;
+  --spacing-s-5: 22px;
+  --spacing-s-6: 28px;
+  --spacing-s-7: 36px;
+  --spacing-s-8: 56px;
+  --spacing-s-9: 72px;
+  --spacing-s-10: 96px;
+
+  /* ---------- Border radii ---------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 14px;
+  --radius-3xl: 16px;
+  --radius-pill: 999px;
+
+  /* ---------- Glows (replaces drop-shadows) ---------- */
+  --shadow-glow-c1: 0 0 12px rgba(var(--c1-rgb), 0.6);
+  --shadow-glow-c2: 0 0 12px rgba(var(--c2-rgb), 0.6);
+  --shadow-glow-soft: 0 0 24px rgba(var(--c1-rgb), 0.25);
+  --shadow-glow-hard: 0 4px 16px rgba(var(--c1-rgb), 0.25);
+  --shadow-glow-press: 0 6px 24px rgba(var(--c2-rgb), 0.35);
+
+  /* ---------- Easings ---------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-pop: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  /* ---------- Durations ---------- */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 350ms;
+  --duration-enter: 800ms;
+
+  /* ---------- Layout ---------- */
+  --container-narrow: 680px;
+  --container-wide: 1280px;
+}
+
+/* ============================================================
+   Base styles
+   ============================================================ */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---------- Selection ---------- */
+::selection {
+  background: rgba(var(--c1-rgb), 0.3);
+  color: var(--color-fg);
+}
+
+/* ---------- Focus ---------- */
+:focus-visible {
+  outline: 3px solid rgba(var(--c1-rgb), 0.12);
+  outline-offset: 2px;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 150, 180, 0.16);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 150, 180, 0.3);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Brand animations ---------- */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+/* ---------- Equalizer bars (Now Playing widget) ---------- */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------- Newsletter gradient border ---------- */
+.newsletter-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--c1-rgb), 0.4),
+    transparent 40%,
+    transparent 60%,
+    rgba(var(--c2-rgb), 0.4)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes sweep {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+/* ============================================================
+   Background — Electric Grid Canvas
+   ============================================================ */
+
+.bg-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: var(--grid-intensity);
+}
+
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(var(--c1-rgb), 0.1),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 80% 100%,
+      rgba(var(--c2-rgb), 0.08),
+      transparent 55%
+    ),
+    radial-gradient(ellipse at 50% 50%, transparent 30%, var(--color-bg) 90%);
+}
+
+.bg-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-stage canvas {
+    display: none;
+  }
+}
+
+/* ---------- Brand mark — SVG orbit animations ---------- */
+
+.bm-orbit {
+  transform-origin: center;
+  stroke-dasharray: 60 40;
+}
+
+.bm-orbit-1 {
+  animation: bmSpin calc(var(--flow-speed) * 0.6) linear infinite;
+}
+
+.bm-orbit-2 {
+  stroke-dasharray: 40 30;
+  animation: bmSpin calc(var(--flow-speed) * 0.45) linear infinite reverse;
+}
+
+.bm-core {
+  transform-origin: center;
+  animation: bmPulse 2s ease-in-out infinite;
+}
+
+@keyframes bmSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   Hero — Portrait frame & shimmer
+   ============================================================ */
+
+/* Radial glow behind portrait */
+.portrait-glow {
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 30% 35%,
+      rgba(var(--c1-rgb), 0.4),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 70% 65%,
+      rgba(var(--c2-rgb), 0.35),
+      transparent 65%
+    );
+  animation: glow-pulse calc(var(--flow-speed) * 0.8) ease-in-out infinite;
+}
+
+/* Animated electric border — left line */
+.hero-portrait::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: -8px;
+  top: 24px;
+  bottom: 24px;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--color-c1),
+    var(--color-c2),
+    transparent
+  );
+  background-size: 100% 200%;
+  animation: hero-frame-down 4s linear infinite;
+  box-shadow: 0 0 12px rgba(var(--c1-rgb), 0.6);
+}
+
+/* Animated electric border — right line */
+.hero-portrait::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: -8px;
+  top: 50px;
+  bottom: 50px;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--color-c2),
+    transparent
+  );
+  background-size: 100% 200%;
+  animation: hero-frame-up 5s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes hero-frame-down {
+  0% {
+    background-position: 0 -100%;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+@keyframes hero-frame-up {
+  0% {
+    background-position: 0 100%;
+  }
+  100% {
+    background-position: 0 -100%;
+  }
+}
+
+/* Gradient text shimmer on hero highlight */
+.hero-shimmer {
+  background: linear-gradient(
+    110deg,
+    var(--color-c1) 0%,
+    #fff 50%,
+    var(--color-c2) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer var(--flow-speed) linear infinite;
+}
+
+/* CTA primary button gradient */
+.hero-cta-primary {
+  background: linear-gradient(
+    135deg,
+    var(--color-c1),
+    var(--color-c2),
+    var(--color-c1)
+  );
+  background-size: 200% 200%;
+  box-shadow: 0 4px 16px rgba(var(--c1-rgb), 0.25);
+}
+
+.hero-cta-primary:hover {
+  background-position: 100% 100%;
+  box-shadow: 0 6px 24px rgba(var(--c2-rgb), 0.35);
+}
+
+/* Wave animation on emoji hand */
+.hero-wave {
+  animation: hero-wave 2.4s ease-in-out infinite;
+}
+
+@keyframes hero-wave {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(14deg);
+  }
+  20% {
+    transform: rotate(-8deg);
+  }
+  30% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes bmPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.7);
+    opacity: 0.7;
+  }
+}

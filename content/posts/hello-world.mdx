@@ -1,0 +1,36 @@
+---
+title: "The unreasonable effectiveness of giving an agent a refund button."
+slug: hello-world
+description: "What happens when you stop treating AI as a read-only oracle and start letting it take real actions — with real consequences."
+date: 2026-05-16
+published: true
+tags:
+  - Agents
+  - AI
+---
+
+Building agentic workflows is one of those things that sounds straightforward until you actually try it. You wire up a model, give it some tools, write a system prompt — and then watch it hallucinate its way through your production database.
+
+## The setup.
+
+We had a simple goal: let the support agent issue refunds under $50 without human approval. The reasoning was sound — 80% of refund requests were under that threshold, and the median resolution time was 4 hours. An agent could do it in seconds.
+
+The interesting question wasn't _can it use the tool_. It was **what does it do on the day it shouldn't**.
+
+## What actually happened.
+
+Three things surprised us:
+
+1. **The agent was more conservative than humans.** It asked clarifying questions we never thought to require. "Was this a duplicate charge or a change of mind?" matters for fraud detection — the agent figured that out from the policy docs alone.
+
+2. **Edge cases surfaced faster.** Within the first week, the agent flagged 12 cases that didn't fit any existing policy. A human would've just picked the closest match and moved on.
+
+3. **The refund rate dropped.** Not because the agent was stingy — because it resolved issues before they became refund requests. Turns out, half the "I want a refund" messages were really "I can't find my order."
+
+## The takeaway.
+
+Giving an agent real authority — not just advisory power — changes how it behaves. It becomes _careful_. It asks better questions. It treats the tool like something that matters.
+
+> The best agents aren't the ones that do the most. They're the ones that know when not to act.
+
+This is the part nobody talks about in the "AI agent" discourse. The interesting problem isn't capability. It's **judgment**.
