@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Caveat } from "next/font/google";
 import localFont from "next/font/local";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ElectricGrid } from "@/components/electric-grid";
 import { Topbar } from "@/components/topbar";
 import { Footer } from "@/components/footer";
@@ -96,6 +97,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </div>
+        <SpeedInsights />
       </body>
     </html>
   );
