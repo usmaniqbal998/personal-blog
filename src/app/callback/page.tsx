@@ -1,13 +1,10 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 const SCOPES = "user-read-currently-playing user-read-recently-played";
 
-async function getRedirectUri() {
-  const hdrs = await headers();
-  const host = hdrs.get("host") ?? "localhost:3000";
-  const protocol = host.startsWith("localhost") ? "http" : "https";
-  return `${protocol}://${host}/callback`;
+function getRedirectUri() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  return `${siteUrl}/callback`;
 }
 
 async function exchangeCode(
@@ -43,7 +40,7 @@ export default async function CallbackPage({
   searchParams: Promise<{ code?: string; error?: string }>;
 }) {
   const params = await searchParams;
-  const redirectUri = await getRedirectUri();
+  const redirectUri = getRedirectUri();
 
   // No code yet — kick off the Spotify auth flow
   if (!params.code && !params.error) {
