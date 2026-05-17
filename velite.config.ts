@@ -39,7 +39,12 @@ const fieldNotesTheme = {
     },
     // Strings
     {
-      scope: ["string", "string.quoted.double", "string.quoted.single", "string.template"],
+      scope: [
+        "string",
+        "string.quoted.double",
+        "string.quoted.single",
+        "string.template",
+      ],
       settings: { foreground: "#4ade80" },
     },
     // Numbers, booleans
@@ -108,6 +113,9 @@ const posts = defineCollection({
       published: s.boolean().default(true),
       tags: s.array(s.string()).default([]),
       image: s.string().optional(),
+      ogTag: s
+        .enum(["AGENTS", "WORKFLOWS", "PROJECT", "THINKING", "NOTES"])
+        .optional(),
       hl: s.string().optional(),
       views: s.number().default(0),
       likes: s.number().default(0),

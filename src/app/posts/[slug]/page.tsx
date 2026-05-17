@@ -35,6 +35,18 @@ export async function generateMetadata({
 
   const canonical = `https://usman.engineer/posts/${post.slug}`;
 
+  // Build dynamic OG image URL. post.image overrides if set (escape hatch).
+  const ogImageUrl = (() => {
+    if (post.image) return `https://usman.engineer${post.image}`;
+    const u = new URL("https://usman.engineer/api/og");
+    u.searchParams.set("title", post.title);
+    u.searchParams.set("description", post.description);
+    u.searchParams.set("tag", post.ogTag ?? "NOTES");
+    u.searchParams.set("date", post.date);
+    u.searchParams.set("readTime", `${post.readingTime} min read`);
+    return u.toString();
+  })();
+
   return {
     title: post.title,
     description: post.description,
@@ -47,13 +59,13 @@ export async function generateMetadata({
       publishedTime: post.date,
       ...(post.updated && { modifiedTime: post.updated }),
       tags: post.tags,
-      ...(post.image && { images: [{ url: post.image }] }),
+      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      ...(post.image && { images: [post.image] }),
+      images: [ogImageUrl],
     },
   };
 }
