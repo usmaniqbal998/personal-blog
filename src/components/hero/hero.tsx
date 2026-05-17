@@ -6,7 +6,7 @@ export function Hero() {
       {/* --- Portrait column --- */}
       <div className="hero-portrait relative isolate w-90 h-110 max-[900px]:w-75 max-[900px]:h-95 max-[720px]:w-60 max-[720px]:h-75 max-[600px]:w-65 max-[600px]:h-80 max-[600px]:mx-auto">
         {/* Radial glow behind portrait */}
-        <div className="portrait-glow absolute -inset-20 z-1 blur-[20px]" />
+        <div className="portrait-glow absolute -inset-20 z-1 blur-[20px] pointer-events-none" />
 
         {/* Inner clip — rounds both bottom corners without cutting the electric borders */}
         <div className="absolute inset-0 rounded-b-3xl overflow-hidden">
