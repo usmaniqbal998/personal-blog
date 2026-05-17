@@ -8,14 +8,18 @@ function FooterBar() {
       <span>© {new Date().getFullYear()} Usman</span>
       <span className="flex items-center gap-s-3">
         <a
-          href="https://twitter.com"
+          href="https://www.linkedin.com/in/m-usman-iqbal/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-fg-dim no-underline transition-colors duration-base hover:text-c1"
         >
-          Twitter
+          LinkedIn
         </a>
         <span aria-hidden="true">·</span>
         <a
-          href="https://github.com"
+          href="https://github.com/usmaniqbal998"
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-fg-dim no-underline transition-colors duration-base hover:text-c1"
         >
           GitHub

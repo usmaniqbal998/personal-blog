@@ -154,7 +154,18 @@ export function NowPlayingWidget({ track }: { track: TrackData }) {
 
         <div className="min-w-0">
           <h3 className="font-display font-normal text-display-s leading-snug text-fg mb-0.5 truncate">
-            {track.title}
+            {track.spotifyUrl ? (
+              <a
+                href={track.spotifyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="no-underline hover:text-c1 transition-colors duration-base"
+              >
+                {track.title}
+              </a>
+            ) : (
+              track.title
+            )}
           </h3>
           <p className="font-body text-body-s text-fg-dim mb-s-2 truncate">
             {track.artist}
