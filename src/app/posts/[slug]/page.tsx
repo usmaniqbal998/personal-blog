@@ -33,12 +33,12 @@ export async function generateMetadata({
   const post = getPost(slug);
   if (!post) return {};
 
-  const canonical = `https://usman.engineer/posts/${post.slug}`;
+  const canonical = `https://usman-iqbal.blog/posts/${post.slug}`;
 
   // Build dynamic OG image URL. post.image overrides if set (escape hatch).
   const ogImageUrl = (() => {
-    if (post.image) return `https://usman.engineer${post.image}`;
-    const u = new URL("https://usman.engineer/api/og");
+    if (post.image) return `https://usman-iqbal.blog${post.image}`;
+    const u = new URL("https://usman-iqbal.blog/api/og");
     u.searchParams.set("title", post.title);
     u.searchParams.set("description", post.description);
     u.searchParams.set("tag", post.ogTag ?? "NOTES");
@@ -109,16 +109,16 @@ export default async function PostPage({ params }: PostPageProps) {
     author: {
       "@type": "Person",
       name: "Usman",
-      url: "https://usman.engineer",
+      url: "https://usman-iqbal.blog",
     },
     publisher: {
       "@type": "Person",
       name: "Usman",
-      url: "https://usman.engineer",
+      url: "https://usman-iqbal.blog",
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://usman.engineer/posts/${post.slug}`,
+      "@id": `https://usman-iqbal.blog/posts/${post.slug}`,
     },
     keywords: post.tags,
     wordCount: post.wordCount,
