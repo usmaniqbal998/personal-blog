@@ -80,7 +80,7 @@ export function NowPlayingWidget({ track }: { track: TrackData }) {
   const eqAnimating = track.isPlaying || audioPlaying;
 
   return (
-    <div className="now-playing-bg relative mt-s-8 border border-line-strong rounded-3xl p-s-6 overflow-hidden backdrop-blur">
+    <div className="now-playing-bg relative mt-s-8 border border-line-strong rounded-3xl p-s-6 overflow-hidden backdrop-blur-sm">
       {/* Sweep shimmer */}
       <div
         className="absolute top-0 w-full h-full pointer-events-none bg-[linear-gradient(90deg,transparent,rgba(var(--c1-rgb),0.08),transparent)]"

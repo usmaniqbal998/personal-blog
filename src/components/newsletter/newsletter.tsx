@@ -8,7 +8,7 @@ export function Newsletter() {
   return (
     <section
       id="subscribe"
-      className="newsletter-border newsletter-bg relative p-s-7 border border-line-strong rounded-3xl overflow-hidden backdrop-blur"
+      className="newsletter-border newsletter-bg relative p-s-7 border border-line-strong rounded-3xl overflow-hidden backdrop-blur-sm"
     >
       <h3 className="font-display font-normal text-[28px] leading-snug text-fg mb-s-2 tracking-display">
         Subscribe to the dispatch.
