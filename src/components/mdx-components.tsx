@@ -1,4 +1,5 @@
 import * as runtime from "react/jsx-runtime";
+import { CodeBlockPre } from "@/components/code-block";
 
 const sharedComponents = {
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -49,12 +50,23 @@ const sharedComponents = {
   em: (props: React.HTMLAttributes<HTMLElement>) => (
     <em className="italic text-fg" {...props} />
   ),
-  code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code
-      className="font-mono text-[0.86em] bg-c1/8 text-c1 px-1.5 py-px rounded-xs border border-c1/18"
-      {...props}
-    />
-  ),
+  code: (
+    props: React.HTMLAttributes<HTMLElement> & Record<string, unknown>
+  ) => {
+    // Code fence code has data-language from rehype-pretty-code — skip pill styling
+    if (props["data-language"] !== undefined) {
+      return <code {...props} />;
+    }
+    return (
+      <code
+        className="font-mono text-[0.86em] bg-c1/8 text-c1 px-1.5 py-px rounded-xs border border-c1/18"
+        {...props}
+      />
+    );
+  },
+  pre: (
+    props: React.HTMLAttributes<HTMLPreElement> & { "data-language"?: string }
+  ) => <CodeBlockPre {...props} />,
   hr: () => <hr className="my-s-8 border-line" />,
 };
 
@@ -65,7 +77,8 @@ function useMDXComponent(code: string) {
 
 interface MDXContentProps {
   code: string;
-  components?: Record<string, React.ComponentType>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  components?: Record<string, React.ComponentType<any>>;
 }
 
 export function MDXContent({ code, components }: MDXContentProps) {

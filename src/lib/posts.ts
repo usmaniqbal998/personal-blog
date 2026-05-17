@@ -29,3 +29,10 @@ export function getAllTags(): string[] {
   const tags = new Set(posts.flatMap((post) => post.tags));
   return Array.from(tags).sort();
 }
+
+export function getNextPost(currentSlug: string): Post | undefined {
+  const published = getPublishedPosts();
+  const idx = published.findIndex((p) => p.slug === currentSlug);
+  if (idx === -1 || idx >= published.length - 1) return published[0];
+  return published[idx + 1];
+}

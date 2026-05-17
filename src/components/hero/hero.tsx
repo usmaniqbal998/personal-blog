@@ -14,8 +14,11 @@ export function Hero() {
           fill
           priority
           sizes="(max-width: 600px) 260px, (max-width: 720px) 240px, (max-width: 900px) 300px, 360px"
-          className="relative z-2 object-contain object-bottom !bottom-6"
+          className="relative z-2 object-contain object-bottom !bottom-6 -translate-y-[10px]"
         />
+
+        {/* Bottom glass fade — blurs portrait into the page */}
+        <div className="absolute bottom-0 left-0 right-0 h-[90px] z-3 pointer-events-none rounded-b-sm backdrop-blur-[8px] bg-linear-to-t from-[rgba(168,85,247,0.18)] via-[rgba(217,70,239,0.08)] to-transparent [mask-image:linear-gradient(to_top,black_30%,transparent_100%)] -translate-y-[10px]" />
 
         {/* Location tag */}
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-4 inline-flex items-center gap-1.5 px-2.5 py-1 bg-[rgba(10,12,20,0.85)] border border-line-strong rounded-pill font-mono text-mono-xs tracking-uppercase text-fg-dim backdrop-blur-[6px] whitespace-nowrap">

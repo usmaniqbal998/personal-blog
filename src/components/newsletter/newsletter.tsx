@@ -8,12 +8,12 @@ export function Newsletter() {
   return (
     <section
       id="subscribe"
-      className="newsletter-border relative p-s-7 border border-line-strong rounded-3xl overflow-hidden bg-[radial-gradient(circle_at_30%_0%,rgba(var(--c1-rgb),0.10),transparent_60%),radial-gradient(circle_at_80%_100%,rgba(var(--c2-rgb),0.10),transparent_60%),rgba(10,12,20,0.6)] backdrop-blur-sm"
+      className="newsletter-border newsletter-bg relative p-s-7 border border-line-strong rounded-3xl overflow-hidden backdrop-blur"
     >
-      <h3 className="font-display font-normal text-display-s text-fg mb-s-2 tracking-display">
+      <h3 className="font-display font-normal text-[28px] leading-snug text-fg mb-s-2 tracking-display">
         Subscribe to the dispatch.
       </h3>
-      <p className="font-body text-body-s leading-body text-fg-dim mb-s-5 max-w-[48ch]">
+      <p className="font-body text-[14px] leading-body text-fg-dim mb-s-5 max-w-[48ch]">
         One email, roughly every other Sunday. Notes from the lab, what I&apos;m
         building, and the occasional half-formed idea I&apos;d love a second
         pair of eyes on.
