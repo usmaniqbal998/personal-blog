@@ -32,7 +32,7 @@ async function getAccessToken(): Promise<string> {
       grant_type: "refresh_token",
       refresh_token: refreshToken,
     }),
-    cache: "no-store",
+    next: { revalidate: 30 },
   });
 
   const data = (await res.json()) as { access_token: string };
@@ -44,7 +44,7 @@ export async function getNowPlaying(): Promise<TrackData | null> {
 
   const res = await fetch(NOW_PLAYING_URL, {
     headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
+    next: { revalidate: 30 },
   });
 
   if (res.status === 204 || res.status > 400) return null;
@@ -71,7 +71,7 @@ export async function getLastPlayed(): Promise<TrackData | null> {
 
   const res = await fetch(`${RECENTLY_PLAYED_URL}?limit=1`, {
     headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
+    next: { revalidate: 30 },
   });
 
   if (!res.ok) return null;
