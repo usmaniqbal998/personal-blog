@@ -85,7 +85,38 @@ Instead of publishing to Kafka in the handler, the service **writes a row into a
 //   └─ reads WAL → Outbox Event Router SMT → produce to Kafka
 ```
 
-![Debezium Outbox Flow](/static/debezium-outbox-flow.png)
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Client as Client/API
+  participant Svc as User Service
+  participant PG as PostgreSQL (usersdb)
+  participant WAL as WAL / Logical Decoding
+  participant DBZ as Debezium (Kafka Connect)
+  participant K as Kafka Broker
+  participant C as Downstream Consumer(s)
+
+  Client->>Svc: Create user request
+  Note over Svc,PG: Begin atomic DB transaction
+  Svc->>PG: INSERT/UPDATE domain tables (e.g., users)
+  Svc->>PG: INSERT INTO public.outboxevent<br/>(aggregatetype, aggregateid, type, payload=PROTO_BYTES, timestamp)
+
+  alt Commit succeeds
+    Svc->>PG: COMMIT
+    PG->>WAL: Append committed changes (domain + outbox)
+    WAL-->>DBZ: Stream changes via publication=dbz_outbox<br/>slot=dbz_outbox_slot (pgoutput)
+    PG-->>DBZ: Change record for public.outboxevent row
+    Note over DBZ: Outbox Event Router SMT<br/>route.by.field=aggregatetype → topic<br/>key=aggregateid, value=payload (binary/proto)<br/>headers: type→eventType, timestamp→ts
+    DBZ->>K: Produce to topic outbox.event.<aggregatetype><br/>key=aggregateid, value=PROTO_BYTES (zstd)
+    K->>C: Deliver event (protobuf bytes)
+    C-->>K: Ack
+  else Commit fails
+    Svc->>PG: ROLLBACK
+    Note over PG,WAL: No WAL entry for rolled-back tx → no CDC event
+  end
+
+  Note over DBZ,K: Debezium handles retries/backoff<br/>and maintains offsets in Connect internal topics
+```
 
 ## Why Debezium's Outbox Event Router?
 

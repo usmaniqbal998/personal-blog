@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { PostHeaderProps } from "./types";
+import { fetchPostStats, trackView } from "@/lib/post-stats";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -32,26 +33,29 @@ function renderTitle(title: string, hl?: string) {
 
 export function PostHeader({
   title,
+  slug,
   hl,
   description,
   tags,
   date,
   readingTime,
   volume,
-  views,
-  likes,
+  views: viewsFallback = 0,
+  likes: likesFallback = 0,
 }: PostHeaderProps) {
-  const [liveReaders, setLiveReaders] = useState(Math.floor((views % 80) + 20));
+  const [views, setViews] = useState(viewsFallback);
+  const [likes, setLikes] = useState(likesFallback);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setLiveReaders((v) => v + (Math.random() > 0.6 ? 1 : 0));
-    }, 3200);
-    return () => clearInterval(id);
-  }, []);
+    trackView(slug);
+    fetchPostStats(slug).then((stats) => {
+      setViews(stats.views);
+      setLikes(stats.likes);
+    });
+  }, [slug]);
 
   return (
-    <header className="mx-auto mb-s-8 max-w-[720px] text-left">
+    <header className="mx-auto mb-s-8 max-w-180 text-left">
       <Link
         href="/"
         className="inline-flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-uppercase text-fg-dim no-underline mt-6 mb-7 transition-[color,gap] duration-base hover:text-c1 hover:gap-3"
@@ -71,28 +75,28 @@ export function PostHeader({
         Back to field notes
       </Link>
 
-      <div className="flex items-center gap-2.5 flex-wrap font-mono text-[10.5px] uppercase tracking-uppercase text-fg-faint mb-s-5">
+      <div className="flex items-center gap-2.5 flex-wrap font-mono text-[10.5px] uppercase tracking-uppercase text-fg-dim mb-s-5">
         {tags.map((tag) => (
           <span
             key={tag}
-            className="text-c2 px-2 py-[3px] border border-c2/35 rounded-pill bg-c2/[0.06]"
+            className="text-c2 px-2 py-0.75 border border-c2/35 rounded-pill bg-c2/[0.06]"
           >
             {tag.toUpperCase()}
           </span>
         ))}
-        <span className="text-fg-faint opacity-40">·</span>
+        <span className="text-fg-dim opacity-40">·</span>
         <span>{formatDate(date)}</span>
-        <span className="text-fg-faint opacity-40">·</span>
+        <span className="text-fg-dim opacity-40">·</span>
         <span>{readingTime} min read</span>
         {volume && (
           <>
-            <span className="text-fg-faint opacity-40">·</span>
+            <span className="text-fg-dim opacity-40">·</span>
             <span>VOL {volume}</span>
           </>
         )}
       </div>
 
-      <h1 className="font-display font-normal text-[56px] leading-[1.04] tracking-[-0.018em] mb-s-5 [text-wrap:balance] text-fg max-[900px]:text-[42px] max-[600px]:text-[34px]">
+      <h1 className="font-display font-normal text-display-xl leading-[1.04] tracking-[-0.018em] mb-s-5 [text-wrap:balance] text-fg max-[900px]:text-[42px] max-[600px]:text-[34px]">
         {renderTitle(title, hl)}
       </h1>
 
@@ -102,22 +106,14 @@ export function PostHeader({
         </p>
       )}
 
-      <div className="flex items-center gap-[18px] flex-wrap py-s-3 border-y border-line font-mono text-[11px] tracking-[0.1em] uppercase text-fg-dim">
+      <div className="flex items-center gap-[18px] flex-wrap py-s-3 border-y border-line font-mono text-[11px] tracking-[0.1em] uppercase text-fg">
         <span className="inline-flex items-center gap-2.5 text-fg mr-auto">
           <span className="author-avatar">U</span>
           <span>Usman</span>
         </span>
-        <span className="inline-flex items-center gap-[7px] text-c1">
-          <span
-            className="inline-block size-1.5 rounded-full bg-c1 animate-[pulse_1.4s_ease-in-out_infinite]"
-            style={{ boxShadow: "0 0 8px var(--c1)" }}
-            aria-hidden="true"
-          />
-          {liveReaders} reading now
-        </span>
-        <span className="inline-flex items-center gap-[7px]">
+        <span className="inline-flex items-center gap-1.75 text-fg-dim">
           <svg
-            className="size-[13px] opacity-70"
+            className="size-3.25"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -128,9 +124,9 @@ export function PostHeader({
           </svg>
           {formatCount(views)}
         </span>
-        <span className="inline-flex items-center gap-[7px]">
+        <span className="inline-flex items-center gap-1.75 text-fg-dim">
           <svg
-            className="size-[13px] opacity-70"
+            className="size-3.25"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

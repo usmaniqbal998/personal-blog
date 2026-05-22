@@ -1,5 +1,6 @@
 import * as runtime from "react/jsx-runtime";
 import { CodeBlockPre } from "@/components/code-block";
+import { MermaidDiagram } from "@/components/mermaid-diagram";
 
 const sharedComponents = {
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -51,7 +52,7 @@ const sharedComponents = {
     <em className="italic text-fg" {...props} />
   ),
   code: (
-    props: React.HTMLAttributes<HTMLElement> & Record<string, unknown>
+    props: React.HTMLAttributes<HTMLElement> & Record<string, unknown>,
   ) => {
     // Code fence code has data-language from rehype-pretty-code — skip pill styling
     if (props["data-language"] !== undefined) {
@@ -65,8 +66,18 @@ const sharedComponents = {
     );
   },
   pre: (
-    props: React.HTMLAttributes<HTMLPreElement> & { "data-language"?: string }
+    props: React.HTMLAttributes<HTMLPreElement> & { "data-language"?: string },
   ) => <CodeBlockPre {...props} />,
+  svg: (props: React.SVGAttributes<SVGSVGElement> & { id?: string }) => {
+    if (typeof props.id === "string" && props.id.startsWith("mermaid-")) {
+      return (
+        <MermaidDiagram>
+          <svg {...props} />
+        </MermaidDiagram>
+      );
+    }
+    return <svg {...props} />;
+  },
   hr: () => <hr className="my-s-8 border-line" />,
 };
 

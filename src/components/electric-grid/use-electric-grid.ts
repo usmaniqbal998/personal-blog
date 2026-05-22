@@ -20,6 +20,7 @@ import {
  */
 export function useElectricGrid(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  disabled = false,
 ) {
   const stateRef = useRef<AnimationState>({
     pulses: [],
@@ -41,6 +42,7 @@ export function useElectricGrid(
   );
 
   useEffect(() => {
+    if (disabled) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -89,5 +91,5 @@ export function useElectricGrid(
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", handleResize);
     };
-  }, [canvasRef, setupCanvas]);
+  }, [canvasRef, setupCanvas, disabled]);
 }

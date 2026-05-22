@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ElectricGrid } from "@/components/electric-grid";
 import { Topbar } from "@/components/topbar";
 import { Footer } from "@/components/footer";
+import { FirebaseAnalytics } from "@/components/firebase-analytics";
 import "./globals.css";
 
 const inter = Inter({
@@ -128,12 +129,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg text-fg font-body">
         <ElectricGrid />
-        <div className="relative z-[1] flex flex-col min-h-full">
+        <div className="relative z-1 flex flex-col min-h-full">
           <Topbar />
           {children}
           <Footer />
         </div>
         <SpeedInsights />
+        <FirebaseAnalytics />
       </body>
     </html>
   );

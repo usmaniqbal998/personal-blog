@@ -1,16 +1,20 @@
 "use client";
 
 import { useRef } from "react";
+import { usePathname } from "next/navigation";
 
 import { useElectricGrid } from "./use-electric-grid";
 
 export function ElectricGrid() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  useElectricGrid(canvasRef);
+  const pathname = usePathname();
+  const isPostPage = pathname.startsWith("/posts/");
+
+  useElectricGrid(canvasRef, isPostPage);
 
   return (
     <div className="bg-stage" aria-hidden="true">
-      <canvas ref={canvasRef} />
+      {!isPostPage && <canvas ref={canvasRef} />}
       <div className="bg-vignette" />
       <div className="bg-noise" />
     </div>

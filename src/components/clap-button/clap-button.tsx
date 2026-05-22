@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { fetchPostStats, addLikes } from "@/lib/post-stats";
 
 const MAX_PER_USER = 50;
+const DEBOUNCE_MS = 500;
 
 function getStoredLikes(key: string): number {
   try {
@@ -29,35 +31,58 @@ interface FloatingHeart {
   drift: number;
 }
 
-export function ClapButton({
-  slug,
-  baseClaps,
-}: {
-  slug: string;
-  baseClaps: number;
-}) {
+export function ClapButton({ slug }: { slug: string }) {
   const storageKey = `post-likes-${slug}`;
+  const [totalLikes, setTotalLikes] = useState(0);
   const [yourLikes, setYourLikes] = useState(0);
   const [showFly, setShowFly] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [floatingHearts, setFloatingHearts] = useState<FloatingHeart[]>([]);
   const flyTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
+  const pendingRef = useRef(0);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
-  // Hydrate from localStorage after mount to avoid SSR/client mismatch
+  // Flush pending claps to Firestore
+  const flush = useCallback(() => {
+    const count = pendingRef.current;
+    if (count > 0) {
+      pendingRef.current = 0;
+      addLikes(slug, count);
+    }
+  }, [slug]);
+
+  // Hydrate from localStorage + fetch Firestore total
   useEffect(() => {
     setYourLikes(getStoredLikes(storageKey));
-  }, [storageKey]);
+    fetchPostStats(slug).then((stats) => {
+      setTotalLikes(stats.likes);
+    });
+  }, [storageKey, slug]);
 
-  const total = baseClaps + yourLikes;
+  // Flush on unmount and beforeunload
+  useEffect(() => {
+    const handleUnload = () => flush();
+    window.addEventListener("beforeunload", handleUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+      flush();
+    };
+  }, [flush]);
 
   const like = useCallback(() => {
     if (yourLikes >= MAX_PER_USER) return;
     const next = yourLikes + 1;
     setYourLikes(next);
+    setTotalLikes((t) => t + 1);
     try {
       localStorage.setItem(storageKey, String(next));
     } catch {}
+
+    // Accumulate and debounce Firestore write
+    pendingRef.current += 1;
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(flush, DEBOUNCE_MS);
 
     // Particle burst
     const id = Math.random().toString(36).slice(2);
@@ -98,10 +123,10 @@ export function ClapButton({
         if (btnRef.current) btnRef.current.style.transform = "";
       }, 120);
     }
-  }, [yourLikes, storageKey]);
+  }, [yourLikes, storageKey, flush]);
 
   return (
-    <div className="mx-auto mb-s-8 mt-s-9 max-w-[720px] flex items-center justify-between gap-5 flex-wrap border-y border-line py-7">
+    <div className="mx-auto mb-s-8 mt-s-9 max-w-180 flex items-center justify-between gap-5 flex-wrap border-y border-line py-7">
       <div className="flex items-center gap-s-3">
         <button
           ref={btnRef}
@@ -144,7 +169,7 @@ export function ClapButton({
         </button>
         <div className="flex flex-col gap-0.5 font-mono">
           <div className="font-display text-[22px] font-medium text-fg leading-none tracking-[-0.01em]">
-            {formatCount(total)}
+            {formatCount(totalLikes)}
             {yourLikes > 0 && (
               <span className="text-c2 italic text-[14px] ml-1.5">
                 +{yourLikes} from you

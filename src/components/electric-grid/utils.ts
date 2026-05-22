@@ -21,8 +21,8 @@ export function createParticles(width: number, height: number): Particle[] {
     x: Math.random() * width,
     y: Math.random() * height,
     r: Math.random() * 1.2 + 0.3,
-    vx: (Math.random() - 0.5) * 0.08,
-    vy: (Math.random() - 0.5) * 0.08,
+    vx: (Math.random() - 0.5) * 0.04,
+    vy: (Math.random() - 0.5) * 0.04,
     a: Math.random() * 0.5 + 0.2,
     phase: Math.random() * Math.PI * 2,
   }));

@@ -1,5 +1,6 @@
 export interface PostHeaderProps {
   title: string;
+  slug: string;
   hl?: string;
   description?: string;
   tags: string[];
@@ -8,6 +9,6 @@ export interface PostHeaderProps {
   readingTime: number;
   wordCount: number;
   volume?: string;
-  views: number;
-  likes: number;
+  views?: number;
+  likes?: number;
 }

@@ -1203,7 +1203,14 @@ body {
 }
 
 /* ---------- Mermaid SVG (generated HTML) ---------- */
-.article pre.mermaid-pre {
+.article > svg[id^="mermaid-"] {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- Mermaid canvas wrapper ---------- */
+.mermaid-canvas {
+  position: relative;
   margin: 28px 0 32px;
   border: 1px solid var(--color-line-strong);
   border-radius: 12px;
@@ -1215,10 +1222,129 @@ body {
     ),
     rgba(10, 12, 20, 0.55);
   overflow: hidden;
+  cursor: zoom-in;
+  transition: border-color 0.2s;
+}
+.mermaid-canvas:hover,
+.mermaid-canvas:focus-visible {
+  border-color: rgba(var(--c1-rgb), 0.35);
+}
+.mermaid-canvas-inner {
+  overflow: hidden;
   padding: 28px 20px;
   text-align: center;
 }
-.article pre.mermaid-pre svg {
+.mermaid-canvas-inner svg {
   max-width: 100%;
   height: auto;
+}
+
+/* Zoom hint badge */
+.mermaid-zoom-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(10, 12, 20, 0.75);
+  border: 1px solid var(--color-line-strong);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
+.mermaid-canvas:hover .mermaid-zoom-hint,
+.mermaid-canvas:focus-visible .mermaid-zoom-hint {
+  opacity: 1;
+}
+
+/* ---------- Mermaid zoom overlay ---------- */
+.mermaid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 6, 10, 0.88);
+  backdrop-filter: blur(8px);
+  animation: mermaid-fade-in 0.2s ease-out;
+}
+.mermaid-overlay-content {
+  position: relative;
+  width: 92vw;
+  max-width: 1200px;
+  max-height: 90vh;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(var(--c1-rgb), 0.04),
+      transparent 60%
+    ),
+    rgba(10, 12, 20, 0.9);
+  overflow: hidden;
+  animation: mermaid-scale-in 0.25s var(--ease-pop);
+}
+.mermaid-overlay-scroll {
+  overflow: auto;
+  max-height: 90vh;
+  padding: 20px;
+  text-align: center;
+}
+.mermaid-overlay-scroll svg {
+  max-width: 100%;
+  height: auto;
+  max-height: 82vh;
+}
+.mermaid-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--color-line-strong);
+  background: rgba(10, 12, 20, 0.8);
+  color: var(--color-fg-dim);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.mermaid-close-btn:hover {
+  color: var(--color-fg);
+  border-color: rgba(var(--c1-rgb), 0.4);
+}
+
+@keyframes mermaid-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes mermaid-scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

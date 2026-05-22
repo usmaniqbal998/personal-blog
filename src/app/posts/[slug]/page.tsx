@@ -135,6 +135,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <div className="relative z-1 mx-auto w-full max-w-[1280px] px-10 pt-8 pb-40 max-[900px]:px-s-5 max-[900px]:pb-30">
         <PostHeader
           title={post.title}
+          slug={post.slug}
           hl={post.hl}
           description={post.description}
           date={post.date}
@@ -142,8 +143,6 @@ export default async function PostPage({ params }: PostPageProps) {
           readingTime={post.readingTime}
           wordCount={post.wordCount}
           volume={post.volume}
-          views={post.views}
-          likes={post.likes}
         />
 
         <div className="post-body grid grid-cols-[200px_minmax(0,680px)_240px] gap-12 justify-center items-start max-[1180px]:grid-cols-[180px_minmax(0,640px)_220px] max-[1180px]:gap-8 max-[1024px]:grid-cols-[180px_minmax(0,1fr)] max-[1024px]:gap-8 max-[760px]:grid-cols-1">
@@ -161,7 +160,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <MarginRail />
         </div>
 
-        <ClapButton slug={post.slug} baseClaps={post.claps} />
+        <ClapButton slug={post.slug} />
 
         {next && next.slug !== post.slug && (
           <NextPost

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Post } from "@/lib/posts";
 import { tagColorClass, formatPostDate, formatCount } from "./utils";
+import { fetchPostStats, addLikes, removeLike } from "@/lib/post-stats";
 
 interface PostCardProps {
   post: Post;
@@ -13,26 +14,39 @@ interface PostCardProps {
 export function PostCard({ post, index }: PostCardProps) {
   const storageKey = `liked-${post.slug}`;
   const [liked, setLiked] = useState(false);
+  const [views, setViews] = useState(post.views);
   const [likeCount, setLikeCount] = useState(post.likes);
 
   useEffect(() => {
     try {
-      const isLiked = localStorage.getItem(storageKey) === "1";
-      setLiked(isLiked);
-      setLikeCount(post.likes + (isLiked ? 1 : 0));
+      setLiked(localStorage.getItem(storageKey) === "1");
     } catch {}
-  }, [storageKey, post.likes]);
 
-  const toggleLike = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const next = !liked;
-    setLiked(next);
-    setLikeCount(post.likes + (next ? 1 : 0));
-    try {
-      localStorage.setItem(storageKey, next ? "1" : "0");
-    } catch {}
-  };
+    fetchPostStats(post.slug).then((stats) => {
+      setViews(stats.views);
+      setLikeCount(stats.likes);
+    });
+  }, [storageKey, post.slug]);
+
+  const toggleLike = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const next = !liked;
+      setLiked(next);
+      setLikeCount((c) => c + (next ? 1 : -1));
+      try {
+        localStorage.setItem(storageKey, next ? "1" : "0");
+      } catch {}
+
+      if (next) {
+        addLikes(post.slug, 1);
+      } else {
+        removeLike(post.slug);
+      }
+    },
+    [liked, storageKey, post.slug],
+  );
 
   const primaryTag = post.tags[0] ?? "Notes";
 
@@ -50,14 +64,13 @@ export function PostCard({ post, index }: PostCardProps) {
       <Link href={`/posts/${post.slug}`} className="block no-underline">
         {/* Content shifts right on hover */}
         <div className="transition-[padding-left] duration-350 ease-in-out group-hover:pl-2">
-
           {/* Top meta: tag · date */}
-          <div className="flex items-center gap-2.5 font-mono text-[10.5px] tracking-[0.12em] uppercase text-fg-faint mb-2.5">
+          <div className="flex items-center gap-2.5 font-mono text-[10.5px] tracking-[0.12em] uppercase text-fg-dim mb-2.5">
             <span className={tagColorClass(primaryTag)}>
               {primaryTag.toUpperCase()}
             </span>
             <span className="opacity-40">·</span>
-            <span className="text-fg-dim">{formatPostDate(post.date)}</span>
+            <span>{formatPostDate(post.date)}</span>
           </div>
 
           {/* Title */}
@@ -71,16 +84,21 @@ export function PostCard({ post, index }: PostCardProps) {
           </p>
 
           {/* Bottom stats row */}
-          <div className="flex items-center gap-3 font-mono text-mono tracking-[0.08em] uppercase text-fg-faint flex-wrap">
+          <div className="flex items-center gap-3 font-mono text-mono tracking-[0.08em] uppercase text-fg-dim flex-wrap">
             {/* Views */}
-            {post.views > 0 && (
+            {views > 0 && (
               <>
                 <span className="inline-flex items-center gap-1.5">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-3.25 h-3.25 stroke-[1.6]">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-3.25 h-3.25 stroke-[1.6]"
+                  >
                     <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
-                  {formatCount(post.views)} views
+                  {formatCount(views)} views
                 </span>
                 <span className="opacity-40">·</span>
               </>
@@ -90,7 +108,7 @@ export function PostCard({ post, index }: PostCardProps) {
             <button
               onClick={toggleLike}
               className={`inline-flex items-center gap-1.5 transition-colors duration-200 cursor-pointer select-none ${
-                liked ? "text-c2" : "text-fg-faint hover:text-c2"
+                liked ? "text-c2" : "text-fg-dim hover:text-c2"
               }`}
               aria-label={liked ? "Unlike post" : "Like post"}
             >
@@ -112,7 +130,6 @@ export function PostCard({ post, index }: PostCardProps) {
               {post.readingTime} min read
             </span>
           </div>
-
         </div>
       </Link>
     </article>
