@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore, type Firestore } from "firebase/firestore/lite";
 
@@ -12,19 +12,29 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-export const app =
-  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+let app: FirebaseApp | null = null;
+
+function getApp(): FirebaseApp | null {
+  if (app) return app;
+  if (!firebaseConfig.apiKey) return null;
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  return app;
+}
 
 let db: Firestore | null = null;
 
-export function getDb(): Firestore {
-  if (!db) db = getFirestore(app);
+export function getDb(): Firestore | null {
+  const firebaseApp = getApp();
+  if (!firebaseApp) return null;
+  if (!db) db = getFirestore(firebaseApp);
   return db;
 }
 
 export async function initAnalytics() {
+  const firebaseApp = getApp();
+  if (!firebaseApp) return null;
   if (typeof window !== "undefined" && (await isSupported())) {
-    return getAnalytics(app);
+    return getAnalytics(firebaseApp);
   }
   return null;
 }
