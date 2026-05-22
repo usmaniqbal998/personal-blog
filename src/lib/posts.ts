@@ -1,21 +1,19 @@
 // This file re-exports Velite's generated content with proper typing.
 // Velite outputs to .velite/ at build time.
 
-import { Post } from "#site/content";
+import { posts, type Post } from "#site/content";
 
 export type { Post };
 
 export function getPostBySlug(slug: string): Post | undefined {
-  const { posts } = require("#site/content");
-  return posts.find((post: Post) => post.slug === slug);
+  return posts.find((post) => post.slug === slug);
 }
 
 export function getPublishedPosts(): Post[] {
-  const { posts } = require("#site/content");
   return posts
-    .filter((post: Post) => post.published)
+    .filter((post) => post.published)
     .sort(
-      (a: Post, b: Post) =>
+      (a, b) =>
         new Date(b.date).getTime() - new Date(a.date).getTime(),
     );
 }
