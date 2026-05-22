@@ -84,13 +84,13 @@ export function PostHeader({
             {tag.toUpperCase()}
           </span>
         ))}
-        <span className="text-fg-dim opacity-40">·</span>
+        <span className="text-fg-dim opacity-60">·</span>
         <span>{formatDate(date)}</span>
-        <span className="text-fg-dim opacity-40">·</span>
+        <span className="text-fg-dim opacity-60">·</span>
         <span>{readingTime} min read</span>
         {volume && (
           <>
-            <span className="text-fg-dim opacity-40">·</span>
+            <span className="text-fg-dim opacity-60">·</span>
             <span>VOL {volume}</span>
           </>
         )}

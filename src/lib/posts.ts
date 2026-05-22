@@ -12,10 +12,7 @@ export function getPostBySlug(slug: string): Post | undefined {
 export function getPublishedPosts(): Post[] {
   return posts
     .filter((post) => post.published)
-    .sort(
-      (a, b) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function getPostsByTag(tag: string): Post[] {

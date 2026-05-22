@@ -66,17 +66,16 @@ const sharedComponents = {
     );
   },
   pre: (
-    props: React.HTMLAttributes<HTMLPreElement> & { "data-language"?: string },
-  ) => <CodeBlockPre {...props} />,
-  svg: (props: React.SVGAttributes<SVGSVGElement> & { id?: string }) => {
-    if (typeof props.id === "string" && props.id.startsWith("mermaid-")) {
-      return (
-        <MermaidDiagram>
-          <svg {...props} />
-        </MermaidDiagram>
-      );
+    props: React.HTMLAttributes<HTMLPreElement> & {
+      "data-language"?: string;
+      "data-mermaid"?: string;
+    },
+  ) => {
+    if (props["data-mermaid"]) {
+      const code = typeof props.children === "string" ? props.children : "";
+      return <MermaidDiagram code={code} />;
     }
-    return <svg {...props} />;
+    return <CodeBlockPre {...props} />;
   },
   hr: () => <hr className="my-s-8 border-line" />,
 };

@@ -75,16 +75,6 @@ Instead of publishing to Kafka in the handler, the service **writes a row into a
 
 **High level flow:**
 
-```go
-// Service code (Tx)
-//   ├─ update real tables
-//   └─ insert into public.outboxevent (payload, headers...)  ← same DB tx
-// Commit
-//      ↓
-// Debezium (Kafka Connect)
-//   └─ reads WAL → Outbox Event Router SMT → produce to Kafka
-```
-
 ```mermaid
 sequenceDiagram
   autonumber

@@ -69,7 +69,7 @@ export function PostCard({ post, index }: PostCardProps) {
             <span className={tagColorClass(primaryTag)}>
               {primaryTag.toUpperCase()}
             </span>
-            <span className="opacity-40">·</span>
+            <span className="opacity-60">·</span>
             <span>{formatPostDate(post.date)}</span>
           </div>
 
@@ -100,7 +100,7 @@ export function PostCard({ post, index }: PostCardProps) {
                   </svg>
                   {formatCount(views)} views
                 </span>
-                <span className="opacity-40">·</span>
+                <span className="opacity-60">·</span>
               </>
             )}
 

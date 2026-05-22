@@ -1,8 +1,42 @@
 import { defineCollection, defineConfig, s } from "velite";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeMermaid from "rehype-mermaid";
 import rehypePrettyCode from "rehype-pretty-code";
+import { visit } from "unist-util-visit";
+import { toString } from "hast-util-to-string";
+
+/**
+ * Custom rehype plugin: extract mermaid code blocks BEFORE rehype-pretty-code
+ * runs, converting them to <pre data-mermaid="true">{raw code}</pre>.
+ * This prevents pretty-code from syntax-highlighting the mermaid source.
+ */
+function rehypeExtractMermaid() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (tree: any) => {
+    visit(tree, "element", (node) => {
+      if (
+        node.tagName === "pre" &&
+        node.children?.length === 1 &&
+        node.children[0].tagName === "code"
+      ) {
+        const code = node.children[0];
+        const className = code.properties?.className;
+        const lang =
+          Array.isArray(className) &&
+          typeof className[0] === "string" &&
+          className[0].startsWith("language-")
+            ? className[0].slice(9)
+            : null;
+
+        if (lang === "mermaid") {
+          const raw = toString(code);
+          node.properties = { "data-mermaid": "true" };
+          node.children = [{ type: "text", value: raw }];
+        }
+      }
+    });
+  };
+}
 
 // Custom syntax theme matching the Field Notes design system tokens
 const fieldNotesTheme = {
@@ -150,32 +184,7 @@ export default defineConfig({
     rehypePlugins: [
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: "wrap" }],
-      [
-        rehypeMermaid,
-        {
-          strategy: "inline-svg",
-          mermaidConfig: {
-            theme: "dark",
-            themeVariables: {
-              darkMode: true,
-              background: "#05060a",
-              primaryColor: "#1e1e2e",
-              primaryTextColor: "#e8eaf1",
-              primaryBorderColor: "#f472b6",
-              secondaryColor: "#0a0c14",
-              secondaryTextColor: "#8b91a8",
-              tertiaryColor: "#0a0c14",
-              lineColor: "#8b91a8",
-              textColor: "#e8eaf1",
-              mainBkg: "#0a0c14",
-              nodeBorder: "#f472b6",
-              clusterBkg: "#0a0c14",
-              titleColor: "#e8eaf1",
-              edgeLabelBackground: "#05060a",
-            },
-          },
-        },
-      ],
+      rehypeExtractMermaid,
       [rehypePrettyCode, { theme: fieldNotesTheme }],
     ],
   },
