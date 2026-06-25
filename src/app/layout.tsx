@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ElectricGrid } from "@/components/electric-grid";
 import { Topbar } from "@/components/topbar";
-import { Footer } from "@/components/footer";
 import { FirebaseAnalytics } from "@/components/firebase-analytics";
 import "./globals.css";
 
@@ -132,7 +131,6 @@ export default function RootLayout({
         <div className="relative z-1 flex flex-col min-h-full">
           <Topbar />
           {children}
-          <Footer />
         </div>
         <SpeedInsights />
         <FirebaseAnalytics />

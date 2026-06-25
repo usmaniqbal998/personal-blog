@@ -1,0 +1,9 @@
+export { ServicesHero } from "./hero";
+export { Tiers } from "./tiers";
+export { Timeline } from "./timeline";
+export { Deliverables } from "./deliverables";
+export { Workflows } from "./workflows";
+export { FitCheck } from "./fit-check";
+export { About } from "./about";
+export { FinalCta } from "./final-cta";
+export { MinimalFooter } from "./minimal-footer";

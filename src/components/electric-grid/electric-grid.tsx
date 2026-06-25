@@ -8,13 +8,13 @@ import { useElectricGrid } from "./use-electric-grid";
 export function ElectricGrid() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pathname = usePathname();
-  const isPostPage = pathname.startsWith("/posts/");
+  const isHome = pathname === "/";
 
-  useElectricGrid(canvasRef, isPostPage);
+  useElectricGrid(canvasRef, !isHome);
 
   return (
     <div className="bg-stage" aria-hidden="true">
-      {!isPostPage && <canvas ref={canvasRef} />}
+      {isHome && <canvas ref={canvasRef} />}
       <div className="bg-vignette" />
       <div className="bg-noise" />
     </div>
