@@ -15,7 +15,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usman-iqbal.blog";
 const PAGE_URL = `${SITE_URL}/services`;
 const DESCRIPTION =
   "AI automations for ops and sales teams. Three weeks, working code, fixed price. No retainer.";
-const OG_TITLE = "Services — Field Notes";
+const OG_TITLE = "Services — Usman Iqbal";
 
 const ogImageUrl = (() => {
   const u = new URL("/api/og", SITE_URL);
@@ -29,7 +29,7 @@ const ogImageUrl = (() => {
 })();
 
 export const metadata: Metadata = {
-  title: "Services",
+  title: { absolute: OG_TITLE },
   description: DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
